@@ -1,0 +1,30 @@
+
+#include <bits/stdc++.h>
+using namespace std;
+
+// Add user function here
+
+int  main(){
+
+int tc= //Enter the exact testcase number ;
+while(tc--){
+int n_1; 
+cin >> n_1; 
+int m_1; 
+cin >> m_1; 
+vector<vector<int>> envelopes (n_1,vector<int>(m_1)); 
+
+for(int i=0; i<n_1; i++){
+    for(int j=0; j<m_1; j++){
+cin >>envelopes[i][j]; 
+    }
+}
+
+int ans = maxEnvelopes(envelopes);
+
+cout<<ans<<endl;
+cout<<"$$$"<<endl;
+
+}
+return 0;
+}
