@@ -15,6 +15,7 @@ async function fetchProblems() {
     next: { revalidate: 10 },
   });
 
+  console.log(res);
   if (!res.ok) {
     throw new Error("Failed to fetch problems");
   }
