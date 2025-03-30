@@ -8,24 +8,47 @@ export type problemsType = {
   problemTitle: string;
   _id: string;
 };
-
 async function fetchProblems() {
   const domain = process.env.NEXT_PUBLIC_DOMAIN;
-
   console.log("DOMAIN :" + domain);
   const res = await fetch(`${domain}/api/problem?start=1&end=100`, {
     next: { revalidate: 10 },
   });
-
   if (!res.ok) {
     throw new Error("Failed to fetch problems");
   }
 
-  const data = await res.json();
-  console.log(data);
-  return data?.messages?.[0]?.problems || null;
-}
+  // Log the raw response text first
+  const text = await res.text();
+  console.log("Raw response:", text);
 
+  // Then try to parse it as JSON
+  try {
+    const data = JSON.parse(text);
+    console.log("Parsed JSON:", data);
+    return data?.messages?.[0]?.problems || null;
+  } catch (error) {
+    console.error("JSON parsing error:", error);
+    return null;
+  }
+}
+// async function fetchProblems() {
+//   const domain = process.env.NEXT_PUBLIC_DOMAIN;
+//
+//   console.log("DOMAIN :" + domain);
+//   const res = await fetch(`${domain}/api/problem?start=1&end=100`, {
+//     next: { revalidate: 10 },
+//   });
+//
+//   if (!res.ok) {
+//     throw new Error("Failed to fetch problems");
+//   }
+//
+//   const data = await res.json();
+//   console.log(data);
+//   return data?.messages?.[0]?.problems || null;
+// }
+//
 function ProblemsLoader({ problems }: { problems: problemsType[] | null }) {
   if (!problems) {
     return <Link href="/login">Login</Link>;
