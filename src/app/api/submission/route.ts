@@ -13,6 +13,8 @@ import {
 } from "../../../../boilerPlateGenerator/LanguageCode";
 import { v4 as uuidv4 } from "uuid";
 import redis from "@/db/redisConnect";
+import { headers } from "next/headers";
+import { hostname } from "os";
 
 const timeOut = 5 * 60;
 
@@ -125,24 +127,12 @@ export async function POST(request: NextRequest) {
 
     // create uuid_status in readis to store the status of the code
 
-    const uuid_status = {
-      cnt: 1,
-      error: false,
-      errorMessage: "",
-      userId: String(body.userId),
-      problemId: String(body.problemId),
-      code: body.code,
-      language: body.language,
-      problemTitle: body.problemTitle,
-      flag: body.flag,
-    };
-
-    await redis.set(
-      uniqueId + "_status",
-      JSON.stringify(uuid_status),
-      `EX`,
-      timeOut,
-    );
+    // await redis.set(
+    //   uniqueId + "_status",
+    //   JSON.stringify(uuid_status),
+    //   `EX`,
+    //   timeOut,
+    // );
     let combineInput = "";
     // console.log("input length" + inputs.length);
     // console.log("output length" + outputs.length);
@@ -162,21 +152,44 @@ export async function POST(request: NextRequest) {
 
     await redis.set(uniqueId + "_code", body.code, `EX`, timeOut);
 
-    // send the code to judge0 for all the inputs
-    const response = await axios.post(`${process.env.JUDGE_URI}/submissions`, {
-      source_code: fullCode.code,
-      language_id: language_id,
-      stdin: combineInput,
-      expected_output: combineOutput,
-      callback_url: process.env.CALLBACK_URI,
-      max_processes_and_or_threads: null,
-      enable_per_process_and_thread_time_limit: true,
-      enable_per_process_and_thread_memory_limit: true,
-      max_file_size: null,
-      enable_network: true,
-    });
+    console.log(fullCode.code);
+
+    console.log(process.env.JUDGE0_URL);
+    console.log(process.env.JUDGE0_API_KEY);
+    console.log(process.env.JUDGE0_API_HOST);
+
+    const options = {
+      method: "POST",
+      url: `${process.env.JUDGE0_URL}/submissions`,
+      headers: {
+        "x-rapidapi-key": process.env.JUDGE0_API_KEY,
+        "x-rapidapi-host": process.env.JUDGE0_API_HOST,
+        "Content-Type": "application/json",
+      },
+      data: {
+        language_id: 2,
+        source_code: fullCode.code,
+        stdin: combineInput,
+        expected_output: combineOutput,
+      },
+    };
+
+    const response = await axios.request(options);
     // save the toke id with the uuid to know which sumissions output is this
     const token = response.data.token;
+    const submission_data = {
+      cnt: 1,
+      error: false,
+      errorMessage: "",
+      userId: String(body.userId),
+      problemId: String(body.problemId),
+      code: body.code,
+      language: body.language,
+      problemTitle: body.problemTitle,
+      flag: body.flag,
+      token: token,
+    };
+
     await redis.set(
       token,
       JSON.stringify({
@@ -185,7 +198,19 @@ export async function POST(request: NextRequest) {
       `EX`,
       timeOut,
     );
-    // }
+
+    // Storing the unique id in the redis with the token
+    await redis.set(
+      uniqueId,
+      JSON.stringify({
+        submission_data,
+      }),
+      `EX`,
+      timeOut,
+    );
+
+    console.log("<------------------RESPONSE----------------->");
+    console.log(response);
 
     const successResponse: responseType = {
       message: "Successfully submitted the code",
@@ -200,6 +225,7 @@ export async function POST(request: NextRequest) {
     };
     return NextResponse.json(successResponse);
   } catch (err) {
+    console.log("<------------------ ERROR ---------------->");
     console.log(err);
     const errorResponse: responseType = {
       message: "Internal server error ",
