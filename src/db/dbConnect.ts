@@ -13,9 +13,12 @@ async function dbConnect(): Promise<void> {
   }
 
   try {
-    const db = await mongoose.connect(process.env.MONGODB_URI || "", {
-      dbName: "logiclab",
-    });
+    console.log(process.env.MONGODB_URI);
+    const db = await mongoose.connect(process.env.MONGODB_URI || "");
+
+    // const db = await mongoose.connect(process.env.MONGODB_URI || "", {
+    //   dbName: "Logiclab",
+    // });
     connection.isConnected = db.connections[0].readyState;
     console.log("Database connected successfully");
   } catch (err) {

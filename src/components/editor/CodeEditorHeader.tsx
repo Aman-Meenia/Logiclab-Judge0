@@ -83,11 +83,10 @@ const CodeEditorHeader = ({
       });
 
     if (response) {
-      for (let i = 1; i <= 10; i++) {
-        await new Promise((resolve) => setTimeout(resolve, (5 + i) * 1000));
-
+      for (let i = 1; i <= 1; i++) {
+        await new Promise((resolve) => setTimeout(resolve, i * 1000));
         const res = await axios
-          .post(`${domain}/api/submission-polling`, {
+          .post(`${domain}/api/submissions-polling`, {
             uniqueId: response,
           })
           .then((res) => {
