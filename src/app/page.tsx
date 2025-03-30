@@ -11,6 +11,8 @@ export type problemsType = {
 
 async function fetchProblems() {
   const domain = process.env.NEXT_PUBLIC_DOMAIN;
+
+  console.log("DOMAIN :" + domain);
   const res = await fetch(`${domain}/api/problem?start=1&end=100`, {
     next: { revalidate: 10 },
   });
