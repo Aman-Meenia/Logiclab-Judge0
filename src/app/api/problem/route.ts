@@ -114,9 +114,14 @@ export async function POST(request: NextRequest) {
 // <--------------------------------GET Problem in range start to end  ------------------------------------->
 
 export async function GET(request: NextRequest) {
+  console.log(
+    "<============================== FETCHING PROBLEMS =======================>",
+  );
+
   try {
     await dbConnect();
     const { searchParams } = new URL(request.url);
+
     const queryParams = {
       start: searchParams.get("start"),
       end: searchParams.get("end"),
