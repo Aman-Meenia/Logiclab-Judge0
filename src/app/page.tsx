@@ -10,7 +10,6 @@ export type problemsType = {
 };
 async function fetchProblems() {
   const domain = process.env.NEXT_PUBLIC_DOMAIN;
-  console.log("DOMAIN :" + domain);
   const res = await fetch(`${domain}/api/problem?start=1&end=100`, {
     next: { revalidate: 10 },
   });
@@ -18,17 +17,15 @@ async function fetchProblems() {
     throw new Error("Failed to fetch problems");
   }
 
-  // Log the raw response text first
   const text = await res.text();
-  console.log("Raw response:", text);
 
   // Then try to parse it as JSON
   try {
     const data = JSON.parse(text);
-    console.log("Parsed JSON:", data);
+    console.log("<--------------- Initial Data --------------->");
+    console.log(data);
     return data?.messages?.[0]?.problems || null;
   } catch (error) {
-    console.error("JSON parsing error:", error);
     return null;
   }
 }

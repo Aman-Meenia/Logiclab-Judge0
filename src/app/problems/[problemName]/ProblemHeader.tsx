@@ -35,6 +35,8 @@ const ProblemHeader = ({
   const fetchSubmissions = async () => {
     const problemId = problemDetails?._id;
     const userId = session?.user?._id;
+
+    console.log("ProblemId " + problemId + "userId " + userId);
     if (!userId) {
       toast.error("Login to see submissions", {});
       return;

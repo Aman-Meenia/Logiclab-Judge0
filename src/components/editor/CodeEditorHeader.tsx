@@ -61,12 +61,17 @@ const CodeEditorHeader = ({
 
     setLoading(true);
 
+    const problemId = problemSelected._id;
+    const userId = session?.user._id;
+
+    console.log("ProblemId " + problemId + "userId " + userId);
+
     const response = await axios
       .post(`${domain}/api/submission`, {
         language: langName.submitCode,
         code: userCode,
-        problemId: problemSelected._id,
-        userId: session?.user._id,
+        problemId: problemId,
+        userId: userId,
         problemTitle: problemSelected.problemTitle,
         flag: flagIs,
       })
@@ -83,8 +88,8 @@ const CodeEditorHeader = ({
       });
 
     if (response) {
-      for (let i = 1; i <= 1; i++) {
-        await new Promise((resolve) => setTimeout(resolve, i * 1000));
+      for (let i = 1; i <= 10; i++) {
+        await new Promise((resolve) => setTimeout(resolve, i + 5 * 1000));
         const res = await axios
           .post(`${domain}/api/submissions-polling`, {
             uniqueId: response,
@@ -101,6 +106,10 @@ const CodeEditorHeader = ({
               ) {
                 const submissionresponse: outputType = res.data.messages[0];
                 submissionresponse.submissionType = flagIs;
+                console.log(
+                  "<===================== SUBMISSION RESPOSNE =================>",
+                );
+                console.log(submissionresponse);
                 setUserCodeOutput(submissionresponse);
                 return res.data;
               }

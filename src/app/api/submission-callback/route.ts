@@ -20,8 +20,8 @@ const convertBase64ToUtf8 = (str: string): string => {
 
 export async function PUT(request: NextRequest) {
   try {
-    // console.log("--------------------------Start---------------------------");
-    // console.log("Judge 0 callback called");
+    console.log("--------------------------Start---------------------------");
+    console.log("Judge 0 callback called");
     const response = await request.json();
     // console.log(response);
     const token = response.token;

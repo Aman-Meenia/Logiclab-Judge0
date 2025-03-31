@@ -65,7 +65,8 @@ const RenderTestCaseOutput = ({
 
   let CompilationError = userCodeOutput?.compile_output || "COMPILATION ERROR";
 
-  CompilationError = ` \`\`\`${CompilationError} \`\`\`\n`;
+  CompilationError = ` \`\`\`\n${CompilationError} \`\`\`\n`;
+  console.log(CompilationError);
 
   return (
     <>
@@ -155,8 +156,10 @@ const RenderTestCaseOutput = ({
         </div>
       ) : userCodeOutput?.status === "Runtime Error (NZEC)" ? (
         <>
-          <div className="pt-3 pl-3 text-xl text-red-400 ">Runtime Error</div>
-          {/* <RenderTestCaseInput testCaseInput={CompilationError} /> */}
+          <div className="pt-3 pl-3 text-xl text-red-400 mb-10">
+            Runtime Error
+          </div>
+          <RenderTestCaseInput testCaseInput={CompilationError} />
         </>
       ) : (
         <div className="pt-3 pl-3 text-l flex">

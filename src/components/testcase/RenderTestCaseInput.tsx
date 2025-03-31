@@ -32,7 +32,6 @@ const RenderTestCaseInput = ({ testCaseInput }: { testCaseInput: string }) => {
     overflowWrap: "break-word" as const,
     wordWrap: "break-word" as const,
   };
-
   const components = {
     h1: ({ node, ...props }: HeadingProps) => (
       <h1 style={{ ...markdownStyles, fontSize: "2em" }} {...props} />

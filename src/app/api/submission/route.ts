@@ -52,6 +52,10 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(errorResponse);
     }
 
+    console.log("Problem Id");
+    console.log(body.problemId);
+    console.log("User id");
+    console.log(body.userId);
     const zodResponse = submissionTypeValidation.safeParse(body);
 
     if (zodResponse.success === false) {
@@ -152,11 +156,11 @@ export async function POST(request: NextRequest) {
 
     await redis.set(uniqueId + "_code", body.code, `EX`, timeOut);
 
-    console.log(fullCode.code);
-
-    console.log(process.env.JUDGE0_URL);
-    console.log(process.env.JUDGE0_API_KEY);
-    console.log(process.env.JUDGE0_API_HOST);
+    // console.log(fullCode.code);
+    //
+    // console.log(process.env.JUDGE0_URL);
+    // console.log(process.env.JUDGE0_API_KEY);
+    // console.log(process.env.JUDGE0_API_HOST);
 
     const options = {
       method: "POST",
@@ -201,7 +205,7 @@ export async function POST(request: NextRequest) {
 
     // Storing the unique id in the redis with the token
     await redis.set(
-      uniqueId,
+      token,
       JSON.stringify({
         submission_data,
       }),
@@ -209,14 +213,14 @@ export async function POST(request: NextRequest) {
       timeOut,
     );
 
-    console.log("<------------------RESPONSE----------------->");
-    console.log(response);
+    // console.log("<------------------RESPONSE----------------->");
+    // console.log(response);
 
     const successResponse: responseType = {
       message: "Successfully submitted the code",
       messages: [
         {
-          uniqueId: uniqueId,
+          uniqueId: token,
           status: "pending",
         },
       ],
