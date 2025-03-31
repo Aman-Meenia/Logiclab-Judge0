@@ -39,8 +39,8 @@ const Testcase = ({
     if (userCodeOutput) setTestCaseSelected(false);
   }, [userCodeOutput]);
   return (
-    <ScrollArea>
-      <div className="flex justify-start gap-3 py-[9px] h-[40px] px-3 rounded-sm bg-[rgba(13,30,50)] text-gray-500">
+    <ScrollArea className="bg-white dark:bg-[rgba(13,17,23)]  rounded-sm ">
+      <div className="flex justify-start gap-3 py-[9px] h-[40px] px-3 rounded-sm bg-[rgba(13,30,50)] text-gray-500 m-1">
         <div
           className={` ${testCaseSelected ? "text-white" : ""} flex gap-2 `}
           onClick={() => {
@@ -63,13 +63,13 @@ const Testcase = ({
 
       {testCaseSelected ? (
         <>
-          <div className="flex  gap-2 pt-3 pb-4 ">
+          <div className="flex  gap-2 pt-3 pb-4 bg:white dark:bg-[rgba(13,17,23)] px-2 ">
             {testCase.map((testCase: testCaseType) => (
               <div
                 key={testCase.id}
                 className={`${
                   selectedTestcase === testCase.id
-                    ? " bg-[rgba(22,27,34)]  rounded-md cursor-default"
+                    ? " dark:bg-[rgba(22,27,34)]  bg-gray-200 rounded-md cursor-default"
                     : "cursor-pointer"
                 } px-2 py-1`}
                 onClick={() => {

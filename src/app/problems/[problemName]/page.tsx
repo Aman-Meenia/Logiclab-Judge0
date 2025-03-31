@@ -3,6 +3,7 @@ import axios from "axios";
 import { Link } from "lucide-react";
 import ProblemDescription from "./ProblemDescription";
 import { problemContextType } from "@/store/ProblemContextProvider";
+import PageNotFound from "@/components/pageNotFound/PageNotFound";
 
 export interface defaultTestCaseType {
   testCase1: string;
@@ -71,16 +72,7 @@ const ProblemPage = async ({ params }: { params: { problemName: string } }) => {
     !problemDescription ||
     problemDescription.description === "Problem not found"
   ) {
-    //TODO: Add the custom 404 page
-    return (
-      <div>
-        <h1>404 - Page Not Found</h1>
-        <p>Oops! The requested page does not exist.</p>
-        <Link href="/">
-          <a>Go back home</a>
-        </Link>
-      </div>
-    );
+    return <PageNotFound />;
   } else {
     // console.log("<------------------Description------------------->");
     // console.log("Problem Description is " + problemDescription);

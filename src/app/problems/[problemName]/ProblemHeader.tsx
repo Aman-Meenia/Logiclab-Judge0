@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { CodeIcon, LightbulbIcon } from "lucide-react";
 import { TbFileDescription } from "react-icons/tb";
 import ProblemRenderer from "./ProblemRenderer";
@@ -9,7 +9,7 @@ import { ProblemContext } from "@/store/ProblemContextProvider";
 import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
 
-type optionsType = "Description" | "Submissions" | "Solution";
+export type optionsType = "Description" | "Submissions" | "Solution";
 export type submissionType = {
   language: string;
   time: string;
@@ -20,10 +20,14 @@ export type submissionType = {
 
 const ProblemHeader = ({
   problemDescription,
+  options,
+  setOptions,
 }: {
   problemDescription: string;
+  options: optionsType;
+  setOptions: React.Dispatch<React.SetStateAction<optionsType>>;
 }) => {
-  const [options, setOptions] = useState<optionsType>("Description");
+  // const [options, setOptions] = useState<optionsType>("Description");
   const [submissions, setSubmissions] = useState<submissionType[] | null>(null);
   const [error, setError] = useState(false);
 
@@ -65,13 +69,15 @@ const ProblemHeader = ({
         setLoading(false);
       });
   };
+  useEffect(() => {
+    if (options === "Submissions") fetchSubmissions();
+  }, [options, setOptions]);
 
   const handleSetSubmissions = (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>,
   ) => {
     e.preventDefault();
     setOptions("Submissions");
-    fetchSubmissions();
   };
   const handleSetDescription = (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>,
@@ -114,7 +120,12 @@ const ProblemHeader = ({
       {options === "Description" ? (
         <ProblemRenderer problemDescription={problemDescription} />
       ) : options === "Solution" ? (
-        <div className="text-lg"> Currently solutions are not avaliable </div>
+        <div className=" flex justify-center items-center h-40 dark:bg-black bg-white">
+          <div className="text-lg text-black dark:text-white">
+            {" "}
+            Currently solutions are not avaliable{" "}
+          </div>
+        </div>
       ) : error ? (
         <div>
           <h1>Login to see submissions</h1>

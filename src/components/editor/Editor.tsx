@@ -8,6 +8,7 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
+import { optionsType } from "@/app/problems/[problemName]/ProblemHeader";
 
 export type defaultTestCaseType = {
   testCase1: string;
@@ -43,9 +44,13 @@ export type outputType = {
 const Editor = ({
   defaultTestCase,
   defaultCode,
+  options,
+  setOptions,
 }: {
   defaultTestCase: defaultTestCaseType;
   defaultCode: defaultCodeType;
+  options: optionsType;
+  setOptions: React.Dispatch<React.SetStateAction<optionsType>>;
 }) => {
   const languages: languageType[] = [
     {
@@ -78,7 +83,7 @@ const Editor = ({
   }, [langName]);
 
   return (
-    <div className="bg-[rgba(13,17,23)] w-full h-[calc(100vh-60px)] p-1 rounded-sm">
+    <div className="dark:bg-[rgba(13,17,23)] bg:white w-full h-[calc(100vh-60px)] p-[0.5px] rounded-sm">
       <ResizablePanelGroup direction="vertical" className="h-full rounded-lg">
         <ResizablePanel defaultSize={50}>
           <div className="bg-black rounded-sm flex flex-col h-full">
@@ -89,6 +94,8 @@ const Editor = ({
               setUserCode={setUserCode}
               userCode={userCode}
               setUserCodeOutput={setUserCodeOutput}
+              options={options}
+              setOptions={setOptions}
             />
             <CodeEditor
               langName={langName}
@@ -100,7 +107,7 @@ const Editor = ({
         </ResizablePanel>
         <ResizableHandle className="h-1 bg-gray-600 my-1" />
         <ResizablePanel defaultSize={50}>
-          <div className="bg-[rgba(13,17,23)] overflow-y-auto h-full">
+          <div className="bg:white overflow-y-auto h-full">
             <Testcase
               defaultTestCase={defaultTestCase}
               userCodeOutput={userCodeOutput}

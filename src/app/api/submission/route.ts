@@ -52,10 +52,6 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(errorResponse);
     }
 
-    console.log("Problem Id");
-    console.log(body.problemId);
-    console.log("User id");
-    console.log(body.userId);
     const zodResponse = submissionTypeValidation.safeParse(body);
 
     if (zodResponse.success === false) {
@@ -179,6 +175,7 @@ export async function POST(request: NextRequest) {
     };
 
     const response = await axios.request(options);
+
     // save the toke id with the uuid to know which sumissions output is this
     const token = response.data.token;
     const submission_data = {
@@ -228,15 +225,30 @@ export async function POST(request: NextRequest) {
       success: "true",
     };
     return NextResponse.json(successResponse);
-  } catch (err) {
+  } catch (err: any) {
     console.log("<------------------ ERROR ---------------->");
-    console.log(err);
+    if (
+      (err?.response?.data?.message ?? "") ===
+      "You have exceeded the DAILY quota for Submissions on your current plan, BASIC. Upgrade your plan at https://rapidapi.com/judge0-official/api/judge0-extra-ce"
+    ) {
+      const errorResponse: responseType = {
+        message:
+          "You have exceeded the daily submission limit or the overall submission limit.",
+        status: 400,
+        success: "false",
+      };
+      return NextResponse.json(errorResponse, {
+        status: 400,
+      });
+    }
     const errorResponse: responseType = {
       message: "Internal server error ",
       status: 500,
       success: "false",
     };
-    return NextResponse.json(errorResponse);
+    return NextResponse.json(errorResponse, {
+      status: 500,
+    });
   }
 }
 

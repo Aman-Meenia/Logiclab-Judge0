@@ -45,8 +45,6 @@ export async function POST(req: NextRequest) {
       };
       return NextResponse.json(errorResponse);
     }
-    console.log("UserId " + body.userId);
-    console.log("ProblemdIs " + body.problemId);
 
     const userSubmissions = await Submission.find({
       userId: new ObjectId(body.userId),
@@ -61,11 +59,6 @@ export async function POST(req: NextRequest) {
         createdAt: true,
       })
       .sort({ createdAt: -1 });
-
-    console.log(
-      "<------------- SUBMISSIONS FETCHED SUCCESSFULLY ------------------>",
-    );
-    console.log(userSubmissions);
 
     const successResponse: responseType = {
       success: "true",

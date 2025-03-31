@@ -11,6 +11,7 @@ import axios from "axios";
 import { ProblemContext } from "@/store/ProblemContextProvider";
 import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
+import { optionsType } from "@/app/problems/[problemName]/ProblemHeader";
 
 const CodeEditorHeader = ({
   langName,
@@ -19,6 +20,8 @@ const CodeEditorHeader = ({
   userCode,
   setUserCode,
   setUserCodeOutput,
+  options,
+  setOptions,
 }: {
   langName: languageType;
   setLangName: React.Dispatch<React.SetStateAction<languageType>>;
@@ -26,6 +29,8 @@ const CodeEditorHeader = ({
   userCode: string;
   setUserCode: React.Dispatch<React.SetStateAction<string>>;
   setUserCodeOutput: React.Dispatch<React.SetStateAction<outputType | null>>;
+  options: optionsType;
+  setOptions: React.Dispatch<React.SetStateAction<optionsType>>;
 }) => {
   const { data: session } = useSession();
   const [isOpen, setIsOpen] = useState(false);
@@ -64,8 +69,6 @@ const CodeEditorHeader = ({
     const problemId = problemSelected._id;
     const userId = session?.user._id;
 
-    console.log("ProblemId " + problemId + "userId " + userId);
-
     const response = await axios
       .post(`${domain}/api/submission`, {
         language: langName.submitCode,
@@ -83,19 +86,35 @@ const CodeEditorHeader = ({
         return "";
       })
       .catch((err) => {
+        if (err.response?.status == 400) {
+          toast.error(err.response?.data?.message);
+          return false;
+        }
+
+        toast.error(
+          "Unable to process your request at a momemt. Please try after sometime.",
+          {
+            position: "top-center",
+            style: {
+              background: "#333",
+              color: "#fff",
+            },
+          },
+        );
         setLoading(false);
         return "";
       });
 
     if (response) {
       for (let i = 1; i <= 10; i++) {
-        await new Promise((resolve) => setTimeout(resolve, i + 5 * 1000));
+        await new Promise((resolve) =>
+          setTimeout(resolve, i == 1 ? (i = 1) : i + 5 * 1000),
+        );
         const res = await axios
           .post(`${domain}/api/submissions-polling`, {
             uniqueId: response,
           })
           .then((res) => {
-            // console.log(res.data);
             if (res?.data?.success === "true") {
               if (
                 res?.data?.messages[0]?.status === "Accepted" ||
@@ -106,17 +125,24 @@ const CodeEditorHeader = ({
               ) {
                 const submissionresponse: outputType = res.data.messages[0];
                 submissionresponse.submissionType = flagIs;
-                console.log(
-                  "<===================== SUBMISSION RESPOSNE =================>",
-                );
-                console.log(submissionresponse);
                 setUserCodeOutput(submissionresponse);
+
+                if (flag === "submit") {
+                  setOptions("Submissions");
+                }
                 return res.data;
               }
             }
             return false;
           })
           .catch((err) => {
+            if (err.response?.data?.status === 400) {
+              toast.error(err.response?.message);
+              return false;
+            }
+            toast.error(
+              "Unable to process your request at a momemt. Please try after sometime.",
+            );
             return false;
           });
 
@@ -145,17 +171,17 @@ const CodeEditorHeader = ({
     <div className="flex justify-between items-center gap-2 py-2 px-3 h-10 rounded-sm bg-[rgba(13,30,50)] text-gray-300">
       <Popover open={isOpen} onOpenChange={setIsOpen}>
         <PopoverTrigger asChild>
-          <div className="flex items-center justify-between bg-[rgba(13,30,50)] hover:text-white cursor-pointer">
+          <div className="flex items-center justify-between hover:text-white cursor-pointer">
             <span>{langName.name}</span>
             <ChevronDown className="ml-2 h-4 w-4" />
           </div>
         </PopoverTrigger>
-        <PopoverContent className="w-[180px] p-0 bg-[rgba(13,30,45)] border border-gray-700">
+        <PopoverContent className="w-[180px] p-0 dark:bg-[rgba(13,30,45)] bg-gray-200 border border-gray-700">
           <div className="max-h-[300px] overflow-y-auto">
             {languages.map((lang, index) => (
               <div
                 key={index}
-                className="w-full justify-start font-normal hover:bg-[rgba(13,30,50)] hover:text-white p-2 cursor-pointer"
+                className="w-full justify-start font-normal  dark:hover:bg-[rgba(13,30,50)] hover:bg-gray-800 hover:text-white p-2 cursor-pointer"
                 onClick={() => {
                   setLangName(lang);
                   setIsOpen(false);

@@ -66,7 +66,6 @@ const RenderTestCaseOutput = ({
   let CompilationError = userCodeOutput?.compile_output || "COMPILATION ERROR";
 
   CompilationError = ` \`\`\`\n${CompilationError} \`\`\`\n`;
-  console.log(CompilationError);
 
   return (
     <>
@@ -92,7 +91,7 @@ const RenderTestCaseOutput = ({
       {userCodeOutput?.status === "Accepted" ||
       userCodeOutput?.status === "Wrong Answer" ? (
         <>
-          <div className="flex gap-2 pt-3 pb-4">
+          <div className="flex gap-2 pt-3 pb-4 ">
             {testCase.map((testCase) => (
               <div
                 key={testCase.id}
@@ -162,7 +161,7 @@ const RenderTestCaseOutput = ({
           <RenderTestCaseInput testCaseInput={CompilationError} />
         </>
       ) : (
-        <div className="pt-3 pl-3 text-l flex">
+        <div className="pt-3 pl-3 text-l flex ">
           Run or Submit you code to see result
         </div>
       )}
