@@ -19,7 +19,7 @@ const CodeEditor = ({
   return (
     <Editor
       height="100%"
-      theme={theme === "light" ? "vs-dark" : "vs-dark"}
+      theme={theme === "light" ? "vs-light" : "vs-dark"}
       path={langName.name}
       defaultLanguage={langName.submitCode}
       value={userCode}

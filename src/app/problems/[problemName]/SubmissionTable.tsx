@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { submissionType } from "./ProblemHeader";
+import { cn } from "@/lib/utils";
 
 const getStatusColor = (status: string) => {
   switch (status) {
@@ -29,45 +30,49 @@ export default function SubmissionTable({
   loading: boolean;
 }) {
   return loading ? (
-    <h1>Loading...</h1>
-  ) : submissions ? (
-    <div className="container mx-auto py-10 px-4">
-      <div className="hidden md:block">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Language</TableHead>
-              <TableHead>Runtime</TableHead>
-              <TableHead>Memory</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Timestamp</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {submissions?.map((entry: submissionType) => (
-              <TableRow key={entry.createdAt}>
-                <TableCell>{entry.language}</TableCell>
-                <TableCell>{entry.time} ms</TableCell>
-                <TableCell>{entry.memory}</TableCell>
-                <TableCell>
-                  <Badge className={getStatusColor(entry.status)}>
-                    {entry.status}
-                  </Badge>
-                </TableCell>
-                <TableCell>{formatDate(entry.createdAt)}</TableCell>
-              </TableRow>
-            ))}
-            {submissions.length == 0 && (
-              <TableRow>
-                <TableCell colSpan={5} className="text-center text-lg">
-                  No submissions found
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </div>
+    <div className="flex justify-center items-center h-40 bg-white dark:bg-black">
+      <p className="text-lg text-black dark:text-white">
+        Loading submissions...
+      </p>
     </div>
+  ) : submissions ? (
+    <Table className="bg-white dark:bg-black">
+      <TableHeader>
+        <TableRow>
+          <TableHead>Language</TableHead>
+          <TableHead>Runtime</TableHead>
+          <TableHead>Memory</TableHead>
+          <TableHead>Status</TableHead>
+          <TableHead>Timestamp</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {submissions?.map((entry: submissionType) => (
+          <TableRow key={entry.createdAt}>
+            <TableCell className=" light:text-black">
+              {entry.language}
+            </TableCell>
+            <TableCell>{entry.time} ms</TableCell>
+            <TableCell>{entry.memory}</TableCell>
+            <TableCell>
+              <Badge
+                className={cn(getStatusColor(entry.status), "dark:text-white")}
+              >
+                {entry.status}
+              </Badge>
+            </TableCell>
+            <TableCell>{formatDate(entry.createdAt)}</TableCell>
+          </TableRow>
+        ))}
+        {submissions.length == 0 && (
+          <TableRow>
+            <TableCell colSpan={5} className="text-center text-lg">
+              No submissions found
+            </TableCell>
+          </TableRow>
+        )}
+      </TableBody>
+    </Table>
   ) : (
     <>
       <div>
