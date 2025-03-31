@@ -1,8 +1,8 @@
 import { resend } from "./resend";
-import VerificationEmail from "../../emails/verificationEmail";
 import { ApiResponse } from "@/types/ApiResponse";
+import PasswordResetEmail from "../../emails/resetPasswordEmail";
 
-export async function sendVerificationEmails(
+export async function sendPasswordResetEmails(
   username: string,
   email: string,
   otp: string,
@@ -11,8 +11,8 @@ export async function sendVerificationEmails(
     const Response = await resend.emails.send({
       from: "logiclab@amanmeenia.com",
       to: email,
-      subject: "Logic Lab | Verification Code",
-      react: VerificationEmail({ username, otp }),
+      subject: "Logic Lab | Reset Password",
+      react: PasswordResetEmail({ username, resetUrl: otp }),
     });
     console.log(Response, "resend email response");
 
