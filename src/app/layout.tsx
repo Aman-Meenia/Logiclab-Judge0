@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   title: "LogicLab",
   description: "Coding Platform To Solve DSA Problems",
   icons: {
-    icon: "/logiclab.png",
+    icon: "/logo/log.png",
   },
 };
 

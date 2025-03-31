@@ -25,7 +25,54 @@ const ForgotPasswordPage = () => {
     },
   });
 
-  const onSubmit = async (data: { email: string }) => {};
+  const onSubmit = async (data: { email: string }) => {
+    // forget-password-email
+    setLoading(true);
+    axios
+      .post(`${domain}/api/forget-password-email`, {
+        email: data.email,
+      })
+      .then((res) => {
+        toast.success(res?.data?.message, {
+          position: "top-center",
+          style: {
+            background: "#333",
+            color: "#fff",
+          },
+        });
+        form.reset();
+      })
+      .catch((err) => {
+        console.log(err?.response?.data);
+        if (err?.response?.status == 500) {
+          toast.error(
+            "Unable to process your request at moment. Please try in a moment.",
+            {
+              position: "top-center",
+              style: {
+                background: "#333",
+                color: "#fff",
+              },
+            },
+          );
+          return;
+        }
+        toast.error(
+          err?.response?.data?.message ||
+            "Unable to process your request at moment. Please try in a moment.",
+          {
+            position: "top-center",
+            style: {
+              background: "#333",
+              color: "#fff",
+            },
+          },
+        );
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
 
   return (
     <>
