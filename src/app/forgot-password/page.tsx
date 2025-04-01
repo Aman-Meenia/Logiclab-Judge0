@@ -1,6 +1,5 @@
 "use client";
 import React, { useState } from "react";
-import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -14,12 +13,20 @@ import { Input } from "@/components/ui/input";
 import { Loader2 } from "lucide-react";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+const formSchema = z.object({
+  email: z.string().email("Please enter a valid email."),
+});
 
 const ForgotPasswordPage = () => {
   const domain = process.env.NEXT_PUBLIC_DOMAIN;
   const [loading, setLoading] = useState(false);
 
-  const form = useForm({
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
     defaultValues: {
       email: "",
     },
