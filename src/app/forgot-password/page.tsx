@@ -30,6 +30,7 @@ const ForgotPasswordPage = () => {
     defaultValues: {
       email: "",
     },
+    // mode: "onTouched",
   });
 
   const onSubmit = async (data: { email: string }) => {

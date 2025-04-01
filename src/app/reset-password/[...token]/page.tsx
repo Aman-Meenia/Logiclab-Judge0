@@ -41,6 +41,7 @@ const ResetPasswordPage = () => {
       password: "",
       confirmPassword: "",
     },
+    // mode: "onTouched",
   });
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
