@@ -22,8 +22,8 @@ async function fetchProblems() {
   // Then try to parse it as JSON
   try {
     const data = JSON.parse(text);
-    console.log("<--------------- Initial Data --------------->");
-    console.log(data);
+    // console.log("<--------------- Initial Data --------------->");
+    // console.log(data);
     return data?.messages?.[0]?.problems || null;
   } catch (error) {
     return null;
@@ -50,7 +50,7 @@ function ProblemsLoader({ problems }: { problems: problemsType[] | null }) {
   if (!problems) {
     return <Link href="/login">Login</Link>;
   }
-  console.log(problems);
+  // console.log(problems);
   return <HomePage problems={problems} />;
 }
 
