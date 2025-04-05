@@ -40,7 +40,7 @@ export async function POST(req: NextRequest) {
 
     if (!user) {
       const errorResponse: responseType = {
-        message: "No account found",
+        message: "No account found!!",
         success: "false",
         status: 400,
       };
