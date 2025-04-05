@@ -142,6 +142,13 @@ const CodeEditorHeader = ({
             }
             toast.error(
               "Unable to process your request at a momemt. Please try after sometime.",
+              {
+                position: "top-center",
+                style: {
+                  background: "#333",
+                  color: "#fff",
+                },
+              },
             );
             return false;
           });

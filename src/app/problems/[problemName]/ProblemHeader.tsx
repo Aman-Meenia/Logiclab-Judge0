@@ -51,6 +51,7 @@ const ProblemHeader = ({
     }
 
     setLoading(true);
+    setError(false);
     await axios
       .post(`${domain}/api/submissions`, {
         problemId,
@@ -61,10 +62,18 @@ const ProblemHeader = ({
           const response: submissionType[] = res?.data?.messages[0];
           setSubmissions(response);
         } else {
-          toast.error("Unable to fetch submissions");
+          toast.error("Unable to fetch submissions", {
+            position: "top-center",
+            style: {
+              background: "#333",
+              color: "#fff",
+            },
+          });
         }
       })
-      .catch(() => {})
+      .catch(() => {
+        setError(true);
+      })
       .finally(() => {
         setLoading(false);
       });
